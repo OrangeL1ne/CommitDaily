@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from "styled-components";
-import {Temp} from "../components/Temp";
+import {Rank} from "../components/Rank";
 
 const PageContainer = styled.div``;
 
 const MainPage = () => {
   return (
     <PageContainer>
-      <Temp/>
+      <Rank/>
     </PageContainer>
   )
 }
