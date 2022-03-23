@@ -38,19 +38,21 @@ const Button = styled.div`
   line-height: 33px;
   color: #000000;
 `;
-const ContentsWrapper = styled.div`
-  height: 0;
-  width: inherit;
-  padding: 0 8px;
-  overflow: hidden;
-  transition: height 0.35s ease, background 0.35s ease;
-`;
 const Contents = styled.div`
   font-style: normal;
   font-weight: 500;
   font-size: 24px;
   line-height: 33px;
 `;
+const Rotate = styled.div`
+-ms-transform: rotate(90deg) scaleY(2); /* IE 9 */
+transform: rotate(90deg) scaleY(2);
+
+text-align: left;
+padding-top: 20px;
+padding-left: 40px;
+padding-bottom: 20px;
+`
 
 export const TeamInfo = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -69,7 +71,7 @@ export const TeamInfo = (props) => {
     <Container>
       <Header onClick={toggle}>
         <Title>팀 소개</Title>
-        <Button>{isOpen ? `-` : `+`}</Button>
+        <Rotate><Button>{isOpen ? `<` : `>` }</Button></Rotate>
       </Header>
       {isOpen ? <Contents> {props.content}</Contents> : null}
     </Container>
