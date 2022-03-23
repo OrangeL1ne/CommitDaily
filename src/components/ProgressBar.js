@@ -21,28 +21,38 @@ const Container = styled.div`
 
   color: #2b6f36;
 `;
-const Bar = styled.progress`
-::-webkit-progress-bar{background-color: #eeeeee; width:100%}
-accent-color: #36A347;
-width: 80%;
-margin: 20px;
+const Progress = styled.progress`
+width : 75%;
+border-radius : 6px;
+::-webkit-progress-value {
+  background-color: #36A347 !important;
+  border-radius : 6px;
+}
+::-moz-progress-bar {
+  background-color: #36A347 !important;
+  border-radius : 6px;
+}
 color: #36A347;
+::-webkit-progress-bar {
+  background-color: #eeeeee; width: 100%;
+  border-radius : 6px;
+}
+background-color: #eeeeee;
 `;
 
-const Bar1 = ({ value, max }) => {
-  return <progress value={value} max={max} />;
+const Bar = ({ value, max }) => {
+  return <Progress value={value} max={max} />;
 };
 
-Bar1.prototypes = {
+Bar.prototypes = {
   value: PropTypes.number.isRequired,
   max: PropTypes.number,
   
 };
 
-Bar1.defaultProps = {
+Bar.defaultProps = {
   max: 100,
 };
-//https://www.youtube.com/watch?v=3sH_Kq9e5hQ
 
 export const ProgressBar = (props) => {
   return (

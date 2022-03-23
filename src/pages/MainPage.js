@@ -11,7 +11,7 @@ const PageContainer = styled.div`
 const MainPage = () => {
   return (
     <PageContainer>
-      <ProgressBar value="70"/>
+      <ProgressBar value="25"/>
       <TeamInfo content="md파일!!"/>
       <StatusCard title="오늘의 출석률" current="2" total="/7명"/>
       <StatusCard title="전체 출석 일수" current="2" total="/8일"/>
