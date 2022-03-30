@@ -103,18 +103,19 @@ export const Rank = () => {
     useEffect(() => {
 
 
-        const sorted=[...rank_list].sort((a,b)=>b.rank-a.rank);
-        setData(sorted.reverse());
+        const sorted=[...rank_list].sort((a,b)=>b.n_commit-a.n_commit);
+        setData(sorted);
         }, [])
 
 
     // space-between
     //container: 582px
 
-    const listItem = data.map((item) =>
+    const listItem = data.map((item, idx) =>
+
         <li key={item.rank}>
             <ListDiv>
-                <div style={{minWidth:"15px"}}>{item.rank}등</div>
+                <div style={{minWidth:"15px"}}>{idx+1}등</div>
                 <div style={{minWidth: "70px" ,padding:"20px 40px 20px 40px"}}>
                     <img alt='profile' src={profile_sample}/>
                 </div>
