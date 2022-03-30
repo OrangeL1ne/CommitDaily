@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import styled from "styled-components";
 import {ScrollSection} from "./ScrollSection";
 import profile_sample from '../assets/profile_sample.png';
@@ -17,8 +17,8 @@ const Title=styled.text`
   height: 50px;
   text-align: center;
   padding-left: 24px;
-  
-  
+
+
   font-style: normal;
   font-weight: 600;
   font-size: 24px;
@@ -29,10 +29,10 @@ const ListDiv=styled.div`
   flex-direction: row;
   align-items: center;
   border-bottom: 1px solid #A6A6A6;
-  
+
 `;
 export const Rank = () => {
-    const list = [
+    const rank_list = [
         {
             rank: 1,
             profile: '../assets/profile_sample.png',
@@ -98,25 +98,20 @@ export const Rank = () => {
         },
     ];
 
-    // compareBy_ASC(key){
-    //     return function(a,b){
-    //         var x=parseInt(a[key]);
-    //         var y=parseInt(b[key]);
-    //
-    //         if(x<y) return -1;
-    //         if(x>y) return 1;
-    //         return 0;
-    //     }
-    // }
+    const [data, setData] = useState([rank_list]);
+
+    useEffect(() => {
+
+
+        const sorted=[...rank_list].sort((a,b)=>b.rank-a.rank);
+        setData(sorted.reverse());
+        }, [])
 
 
     // space-between
     //container: 582px
-    // let arrayCopy=[...list];
-    // arrayCopy.sort(this.compareBy_ASC('n_commit'));
-    // this.setState({list:arrayCopy})
 
-    const listItem = list.map((item) =>
+    const listItem = data.map((item) =>
         <li key={item.rank}>
             <ListDiv>
                 <div style={{minWidth:"15px"}}>{item.rank}등</div>
