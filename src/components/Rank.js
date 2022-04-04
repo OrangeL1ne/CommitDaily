@@ -17,8 +17,6 @@ const Title=styled.text`
   height: 50px;
   text-align: center;
   padding-left: 24px;
-
-
   font-style: normal;
   font-weight: 600;
   font-size: 24px;
