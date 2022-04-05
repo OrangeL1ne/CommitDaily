@@ -3,7 +3,9 @@ import styled from "styled-components";
 
 const Container = styled.div`
   text-align: center;
-
+  width:276px;
+  height:312px;
+  margin: 48px 15px 24px 15px;
   background: #ffffff;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.07);
   border-radius: 7px;

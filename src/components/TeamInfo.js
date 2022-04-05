@@ -3,14 +3,14 @@ import styled from "styled-components";
 
 const Container = styled.div`
   text-align: center;
-
   background: #ffffff;
+  width: 1194px;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.07);
   border-radius: 7px;
-
   cursor: pointer;
 `;
 const Header = styled.div`
+  width: 1194px;
   display: flex;
   text-align: center;
   justify-content: space-between;
@@ -43,6 +43,7 @@ const Contents = styled.div`
   font-weight: 500;
   font-size: 24px;
   line-height: 33px;
+  height: 400px;
 `;
 const Rotate = styled.div`
 -ms-transform: rotate(90deg) scaleY(2); /* IE 9 */

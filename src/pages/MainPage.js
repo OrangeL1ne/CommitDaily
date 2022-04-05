@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import {Rank} from "../components/Rank";
 import { ProgressBar } from "../components/ProgressBar";
 import { TeamInfo } from "../components/TeamInfo";
 import { StatusCard } from "../components/StatusCard";
@@ -10,13 +11,23 @@ const PageContainer = styled.div`
 
 const MainPage = () => {
   return (
-    <PageContainer>
-      <ProgressBar value="70"/>
-      <TeamInfo content="md파일!!"/>
-      <StatusCard title="오늘의 출석률" current="2" total="/7명"/>
-      <StatusCard title="전체 출석 일수" current="2" total="/8일"/>
-      <StatusCard title="전체 커밋 개수" current="47개"/>
-    </PageContainer>
+      <PageContainer>
+          <ProgressBar value="70"/>
+          <TeamInfo content="md파일!!"/>
+          <div style={{display:"flex", flexDirection:"horizontal"}}>
+          <div>
+            <Rank/>
+          </div>
+          <div >
+              <div style={{display:"flex", flexDirection:"horizontal"}}>
+                <StatusCard title="오늘의 출석률" current="2" total="/7명"/>
+                <StatusCard title="전체 출석 일수" current="2" total="/8일"/>
+              </div>
+              {/*컴포넌트 width, height가 적용이 안됨*/}
+              <StatusCard style={{width:"582px", height:"384px"}} title="전체 커밋 개수" current="47개"/>
+          </div>
+          </div>
+      </PageContainer>
   );
 };
 
