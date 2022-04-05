@@ -3,8 +3,9 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 
 const Container = styled.div`
-  padding: 20px;
   display: flex;
+  width:1194px;
+  height:64px;
   justify-content: space-evenly;
   align-items: center;
 
@@ -47,7 +48,7 @@ const Bar = ({ value, max }) => {
 Bar.prototypes = {
   value: PropTypes.number.isRequired,
   max: PropTypes.number,
-  
+
 };
 
 Bar.defaultProps = {

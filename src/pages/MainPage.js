@@ -19,11 +19,12 @@ const MainPage = () => {
             <Rank/>
           </div>
           <div >
-              <div style={{display:"flex", flexDirection:"horizontal", padding:"24px"}}>
+              <div style={{display:"flex", flexDirection:"horizontal"}}>
                 <StatusCard title="오늘의 출석률" current="2" total="/7명"/>
                 <StatusCard title="전체 출석 일수" current="2" total="/8일"/>
               </div>
-              <StatusCard title="전체 커밋 개수" current="47개"/>
+              {/*컴포넌트 width, height가 적용이 안됨*/}
+              <StatusCard style={{width:"582px", height:"384px"}} title="전체 커밋 개수" current="47개"/>
           </div>
           </div>
       </PageContainer>

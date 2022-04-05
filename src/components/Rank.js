@@ -2,16 +2,6 @@ import React, {useState, useEffect} from 'react'
 import styled from "styled-components";
 import {ScrollSection} from "./ScrollSection";
 import profile_sample from '../assets/profile_sample.png';
-// import ranker1 from '../assets/ranker1.png';
-// const Container = styled.div`
-//   overflow: scroll;
-//   font-weight: bold;
-//   width:582px;
-//   height: 720px;
-//   background: #FFFFFF;
-//   box-shadow: 0 2px 10px;
-//
-// `;
 const Title=styled.text`
   width: 117px;
   height: 50px;
@@ -113,6 +103,7 @@ export const Rank = () => {
 
         <li key={item.rank}>
             <ListDiv>
+                {/*TODO: 1등 아이콘 처리*/}
                 <div style={{minWidth:"15px"}}>{idx+1}등</div>
                 <div style={{minWidth: "70px" ,padding:"20px 40px 20px 40px"}}>
                     <img alt='profile' src={profile_sample}/>

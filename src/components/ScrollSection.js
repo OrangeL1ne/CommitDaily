@@ -8,7 +8,7 @@ export const ScrollSection = memo(props => {
 
 const StyledAlwaysScrollSection = styled.div`
   overflow: scroll;
-  margin: 48px 0 48px 0;
+  margin: 48px 30px 48px 0;
   font-weight: bold;
   width:582px;
   height: 720px;
