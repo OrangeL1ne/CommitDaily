@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import coolicon from '../../assets/coolicon.svg';
 
 const Container = styled.div`
   text-align: center;
@@ -46,13 +47,8 @@ const Contents = styled.div`
   height: 400px;
 `;
 const Rotate = styled.div`
--ms-transform: rotate(90deg) scaleY(2); /* IE 9 */
-transform: rotate(90deg) scaleY(2);
-
-text-align: left;
-padding-top: 20px;
-padding-left: 40px;
-padding-bottom: 20px;
+-ms-transform: rotate(180deg); /* IE 9 */
+transform: rotate(180deg);
 `
 
 export const InfoCard = (props) => {
@@ -72,7 +68,7 @@ export const InfoCard = (props) => {
     <Container>
       <Header onClick={toggle}>
         <Title>팀 소개</Title>
-        <Rotate><Button>{isOpen ? `<` : `>` }</Button></Rotate>
+        <Button>{isOpen ? <img src={coolicon}/> : <Rotate><img src={coolicon}/></Rotate> }</Button>
       </Header>
       {isOpen ? <Contents> {props.content}</Contents> : null}
     </Container>
