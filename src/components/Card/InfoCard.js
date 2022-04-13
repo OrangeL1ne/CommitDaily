@@ -55,7 +55,7 @@ padding-left: 40px;
 padding-bottom: 20px;
 `
 
-export const TeamInfo = (props) => {
+export const InfoCard = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   function toggle() {
     if (isOpen) {
