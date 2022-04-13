@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import {ProgressBar} from "../ProgressBar";
 
 const HeadingText = styled.h2`
   margin: 0 0 50px 0;
@@ -30,7 +31,7 @@ export const TeamCard = ({data}) => {
     <header>
       <HeadingText>{data.team}</HeadingText>
       <PeriodText>Period : {startDate} ~ {endDate} (총 {period}일)</PeriodText>
-      {/*ProgressBar*/}
+      <ProgressBar value="70" />
     </header>
   );
 }

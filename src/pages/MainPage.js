@@ -3,7 +3,6 @@ import styled from "styled-components";
 import {Header} from "../components/Header";
 import {TeamCard} from "../components/Card/TeamCard";
 import {RankingCard} from "../components/Card/RankingCard";
-import {ProgressBar} from "../components/ProgressBar";
 import {InfoCard} from "../components/Card/InfoCard";
 import {StatusCard} from "../components/Card/StatusCard";
 import {CommitCard} from "../components/Card/CommitCard";
@@ -17,7 +16,7 @@ const PageContainer = styled.main`
 `;
 
 const Section = styled.section`
-  margin: ${props => props.top || 0}px ${props => props.right || 0}px 0 0;
+  margin: 48px 0 0;
 `;
 
 const MainPage = () => {
@@ -31,22 +30,18 @@ const MainPage = () => {
       <Header _onClick={handleLogin} />
       <PageContainer>
         <TeamCard data={TeamData} />
-        <ProgressBar value="70"/>
-        <InfoCard content="md파일!!"/>
-        <div style={{display:"flex", flexDirection:"horizontal"}}>
-          <div>
-            <RankingCard/>
+        <Section>
+          <InfoCard content="md파일!!" />
+        </Section>
+        <Section style={{display: 'inline-flex'}}>
+          <RankingCard />
+          <div style={{marginLeft: '30px', display: 'grid', gridColumnGap: '30px', gridRowGap: '24px'}}>
+            <StatusCard title="오늘의 출석률" current="2" total="/7명" column="1/2" row="1/2" />
+            <StatusCard title="전체 출석 일수" current="2" total="/8일" column="2/3" row="1/2" />
+            <StatusCard title="전체 커밋 개수" current="47개" height={384} column="1/3" row="2/3" />
           </div>
-          <div >
-            <div style={{display:"flex", flexDirection:"horizontal"}}>
-              <StatusCard title="오늘의 출석률" current="2" total="/7명" />
-              <StatusCard title="전체 출석 일수" current="2" total="/8일" />
-            </div>
-            {/*컴포넌트 width, height가 적용이 안됨*/}
-            <StatusCard style={{width:"582px", height:"384px"}} title="전체 커밋 개수" current="47개" />
-          </div>
-        </div>
-        <Section top={48}>
+        </Section>
+        <Section>
           <CommitCard data={TempUser} />
         </Section>
       </PageContainer>
