@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import styled from "styled-components";
-import {ScrollSection} from "./ScrollSection";
-import profile_sample from '../assets/profile_sample.png';
+import {ScrollSection} from "../ScrollSection";
+import profile_sample from '../../assets/profile_sample.png';
 const Title=styled.text`
   width: 117px;
   height: 50px;
@@ -19,7 +19,7 @@ const ListDiv=styled.div`
   border-bottom: 1px solid #A6A6A6;
 
 `;
-export const Rank = () => {
+export const RankingCard = () => {
     const rank_list = [
         {
             rank: 1,

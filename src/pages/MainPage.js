@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 import {Header} from "../components/Header";
-import {TeamCard} from "../components/TeamCard";
-import {Rank} from "../components/Rank";
+import {TeamCard} from "../components/Card/TeamCard";
+import {RankingCard} from "../components/Card/RankingCard";
 import {ProgressBar} from "../components/ProgressBar";
-import {TeamInfo} from "../components/TeamInfo";
-import {StatusCard} from "../components/StatusCard";
-import {CommitCard} from "../components/CommitCard";
+import {InfoCard} from "../components/Card/InfoCard";
+import {StatusCard} from "../components/Card/StatusCard";
+import {CommitCard} from "../components/Card/CommitCard";
 import {TeamData} from "../assets/TeamData";
 import {TempUser} from "../assets/TempUser";
 
@@ -32,10 +32,10 @@ const MainPage = () => {
       <PageContainer>
         <TeamCard data={TeamData} />
         <ProgressBar value="70"/>
-        <TeamInfo content="md파일!!"/>
+        <InfoCard content="md파일!!"/>
         <div style={{display:"flex", flexDirection:"horizontal"}}>
           <div>
-            <Rank/>
+            <RankingCard/>
           </div>
           <div >
             <div style={{display:"flex", flexDirection:"horizontal"}}>
