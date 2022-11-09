@@ -1,5 +1,6 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
+import axios from "axios";
 import {Header} from "../components/Header";
 import {TeamCard} from "../components/Card/TeamCard";
 import {RankingCard} from "../components/Card/RankingCard";
@@ -20,6 +21,36 @@ const Section = styled.section`
 `;
 
 const MainPage = () => {
+  const [users, setUsers] = useState(['eeseung', 'bogyung1']);
+  const [userCommits, setUserCommits] = useState([]);
+
+  useEffect(() => {
+    const requests = users.map(user => axios.get(user));
+    const cheerio = require('cheerio');
+
+    axios.all(requests).then(
+      axios.spread((...response) => {
+        const result = response.map((r, i) => {
+          const $ = cheerio.load(r.data);
+          const rects = [];
+          let commitObj = {};
+
+          $('rect').each((index, item) => {
+            rects.push(item.attribs);
+          });
+
+          rects.forEach(rect => {
+            commitObj[rect['data-date']] = rect['data-score'];
+          });
+
+          return ({userName: users[i], commits: commitObj});
+        });
+
+        setUserCommits(result);
+    })).catch(errors => {
+      console.error(errors);
+    });
+  }, [])
 
   function handleLogin() {
     // TODO: login
