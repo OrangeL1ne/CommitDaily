@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import axios from "axios";
 import {Header} from "../components/Header";
@@ -33,24 +33,28 @@ const MainPage = () => {
         const result = response.map((r, i) => {
           const $ = cheerio.load(r.data);
           const rects = [];
-          let commitObj = {};
+          const commitMap = new Map();
 
           $('rect').each((index, item) => {
             rects.push(item.attribs);
           });
 
           rects.forEach(rect => {
-            commitObj[rect['data-date']] = rect['data-score'];
+            const date = new Date(rect['data-date']);
+
+            if (TeamData.start <= date && date <= TeamData.end) {
+              commitMap.set(date, rect['data-score']);
+            }
           });
 
-          return ({userName: users[i], commits: commitObj});
+          return ({userName: users[i], commits: new Map([...commitMap.entries()].sort((a, b) => a[0] - b[0]))});
         });
 
         setUserCommits(result);
     })).catch(errors => {
       console.error(errors);
     });
-  }, [])
+  }, [users])
 
   function handleLogin() {
     // TODO: login
