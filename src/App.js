@@ -1,7 +1,10 @@
 import './App.css';
 import MainPage from "./pages/MainPage";
 
-function App() {
+function App({authService}) {
+
+  authService.login('Github').then(result=>console.log(result));
+
   return (
     <MainPage />
   );

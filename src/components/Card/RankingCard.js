@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import styled from "styled-components";
 import {ScrollSection} from "../ScrollSection";
 import profile_sample from '../../assets/profile_sample.png';
+import axios from "axios";
 const Title=styled.text`
   width: 117px;
   height: 50px;
@@ -19,87 +20,28 @@ const ListDiv=styled.div`
   border-bottom: 1px solid #A6A6A6;
 
 `;
-export const RankingCard = () => {
-    const rank_list = [
-        {
-            rank: 1,
-            profile: '../assets/profile_sample.png',
-            user: 'Bogyung',
-            n_commit: 3,
-        },
-        {
-            rank: 2,
-            profile: '',
-            user: 'Robin',
-            n_commit: 4,
-        },
-        {
-            rank: 3,
-            profile: '',
-            user: 'Robin',
-            n_commit: 5,
-        },
-        {
-            rank: 4,
-            profile: '',
-            user: 'Robin',
-            n_commit: 6,
-        },
-        {
-            rank: 5,
-            profile: '',
-            user: 'Robin',
-            n_commit: 1,
-        },
-        {
-            rank: 6,
-            profile: '',
-            user: 'Robin',
-            n_commit:21,
-        },
-        {
-            rank: 7,
-            profile: '',
-            user: 'Robin',
-            n_commit: 16,
-        },
-        {
-            rank: 8,
-            profile: '',
-            user: 'Robin',
-            n_commit: 11,
-        },{
-            rank: 9,
-            profile: '',
-            user: 'Robin',
-            n_commit: 16,
-        },{
-            rank: 10,
-            profile: '',
-            user: 'Robin',
-            n_commit: 31,
-        },{
-            rank: 11,
-            profile: '',
-            user: 'Robin',
-            n_commit: 11,
-        },
-    ];
+export const RankingCard = ({data}) => {
 
-    const [data, setData] = useState([rank_list]);
+    const rank_list=[];
+
+    //(userCommits[0].commits.get("Sun Jan 02 2022")
+
+    for(let i=0; i<data.length; i++){
+        rank_list.push({rank:i, user: data[i].userName, n_commit:parseInt(data[i].commits.get("Sun Jan 02 2022"))})
+    }
+    console.log(rank_list);
+
+    const [dataT, setDataT] = useState([rank_list]);
 
     useEffect(() => {
-
-
-        const sorted=[...rank_list].sort((a,b)=>b.n_commit-a.n_commit);
-        setData(sorted);
+        const sorted=[...rank_list].sort((a,b)=>parseInt(b.n_commit)-parseInt(a.n_commit));
+        setDataT(sorted);
         }, [])
-
 
     // space-between
     //container: 582px
 
-    const listItem = data.map((item, idx) =>
+    const listItem = dataT.map((item, idx) =>
 
         <li key={item.rank}>
             <ListDiv>

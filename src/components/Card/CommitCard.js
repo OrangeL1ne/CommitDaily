@@ -79,13 +79,13 @@ export const CommitCard = ({data}) => {
       else if (commit.count >= 1) index = 1;
 
       return (
-        <g key={i}>
-          <rect
-            width="41" height="26" x={i * 72} rx="6" fill={`var(--color-green-${index})`} strokeWidth="1" stroke="#DEDEDE"
-            onMouseOver={() => handleMouseOver({top: idx, left: i})}
-            onMouseOut={handleMouseOut}
-          />
-          {tipPosition.top !== -1 && tipPosition.left !== -1 && tipPosition.top === idx && tipPosition.left === i &&
+          <g key={i}>
+            <rect
+                width="41" height="26" x={i * 72} rx="6" fill={`var(--color-green-${index})`} strokeWidth="1" stroke="#DEDEDE"
+                onMouseOver={() => handleMouseOver({top: idx, left: i})}
+                onMouseOut={handleMouseOut}
+            />
+            {tipPosition.top !== -1 && tipPosition.left !== -1 && tipPosition.top === idx && tipPosition.left === i &&
             <g>
               <svg width="304" height="73" x={tipPosition.left * 72 - 132} y="-65" viewBox="0 0 304 73" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g opacity="0.98">
@@ -97,8 +97,8 @@ export const CommitCard = ({data}) => {
                 {commit.count}commits on {months[commit.date.getMonth()]} {commit.date.getDate() + getNth(commit.date.getDate())}
               </TooltipText>
             </g>
-          }
-        </g>
+            }
+          </g>
       )
     });
 
@@ -106,24 +106,24 @@ export const CommitCard = ({data}) => {
   });
 
   return (
-    <Card>
-      <HeadingText>잔디 밭 🌱</HeadingText>
-      <div style={{display:'flex'}}>
-        <CommitContainer>
-          <svg width={72 * data[0].commits.length + 140} height={(data.length + 1) * 49 + 16}>
-            <g transform="translate(152, 45)">
-              {dateList}
-            </g>
-            <g transform="translate(0, 72)">
-              {userList}
-            </g>
-            <g transform="translate(152, 72)">
-              {commits}
-            </g>
-          </svg>
-        </CommitContainer>
-      </div>
-    </Card>
+      <Card>
+        <HeadingText>잔디 밭 🌱</HeadingText>
+        <div style={{display:'flex'}}>
+          <CommitContainer>
+            <svg width={72 * data[0].commits.length + 140} height={(data.length + 1) * 49 + 16}>
+              <g transform="translate(152, 45)">
+                {dateList}
+              </g>
+              <g transform="translate(0, 72)">
+                {userList}
+              </g>
+              <g transform="translate(152, 72)">
+                {commits}
+              </g>
+            </svg>
+          </CommitContainer>
+        </div>
+      </Card>
   );
 };
 
@@ -133,4 +133,3 @@ CommitCard.defaultProps = {
     end: new Date('2022-01-17')
   }
 };
-
