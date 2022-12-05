@@ -24,7 +24,7 @@ const Section = styled.section`
   margin: 48px 0 0;
 `;
 
-const MainPage = () => {
+const MainPage = ({data}) => {//data:gitHub Email
 
     //랭킹카드 안가져와지는 것도 데이터가 아직 0인 상태에서 불러와서 안보이는 것임 -> 가끔가다 보이는게 합리적 의심
   //collection:user
@@ -34,13 +34,44 @@ const MainPage = () => {
 
   let today=new Date().toDateString();
 
-  const [users, setUsers] = useState(['eeseung', 'bogyung1', 'Loy-Yun', 'seonggwonyoon']);
+  //const [users, setUsers] = useState(['eeseung', 'bogyung1', 'Loy-Yun', 'seonggwonyoon']);
+  const [users, setUsers] = useState([]);
   const [userCommits, setUserCommits] = useState([]);
   const [totNum, setTotNum]=useState(0);
   const [totCommit,setTotCommit]=useState(0);
   const [isLoading, setIsLoading]=useState(true);
 
    useEffect(() => {
+
+
+       console.log("@@@@@@@@@@@@")
+       const user=firestore.collection("user");
+       user.get().then((docs)=>{
+
+           docs.forEach((doc)=>{
+               if(doc.exists){
+                   console.log("@?@??@?@?")
+                   console.log(doc.data().email);
+                   if(doc.data().email==="bogyung1@naver.com"){//로그인한 github email 전달
+                       if(!doc.data().isAuth){//false
+                           user.doc(doc.id).update({isAuth: true}).then(r => console.log("로그인되었습니다!"));
+
+                       }
+                   }
+                   if(doc.data().isAuth){
+                       if(!users.includes(doc.data().displayName)){
+                           users.push(doc.data().displayName);
+                           setUsers(users);
+                       }
+                   }
+               }
+           });
+       });
+
+     console.log("user....");
+     console.log(users);
+
+
      const requests = users.map(user => axios.get(user));
      const cheerio = require('cheerio');
 
@@ -71,23 +102,6 @@ const MainPage = () => {
        console.error(errors);
 
      });
-
-     //로그인한 사람 정보 가져와서
-     // isAuth: bogyung -> login -> firebase 미리 저장되어있음 -> login: false -> login : true -> 화면에 추가가되는거쥐
-     //isAuth: bogyung -> lohin -> lohin:true -> 원래 화면 내보내면 됨
-
-    console.log("@@@@@@@@@@@@")
-    const user=firestore.collection("user");
-    user.get().then((docs)=>{
-
-        docs.forEach((doc)=>{
-            if(doc.exists){
-                console.log(doc.data());
-                console.log(doc.id);
-            }
-        });
-    });
-
 
      setIsLoading(false);
      // setTotCommit(userCommits[0].commits.size);

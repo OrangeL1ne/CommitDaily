@@ -43,7 +43,7 @@ export const RankingCard = ({data}) => {
 
     const listItem = dataT.map((item, idx) =>
 
-        <li key={item.rank}>
+        <li key={item}>
             <ListDiv>
                 {/*TODO: 1등 아이콘 처리*/}
                 <div style={{minWidth:"15px"}}>{idx+1}등</div>
