@@ -67,9 +67,9 @@ const MainPage = () => {
     <>
       <Header _onClick={handleLogin} />
       <PageContainer>
-        <TeamCard data={TeamData} />
+        <TeamCard {...TeamData} />
         <Section>
-          <InfoCard content="md파일!!" />
+          <InfoCard />
         </Section>
         <Section style={{display: 'inline-flex'}}>
           <RankingCard />
@@ -80,7 +80,7 @@ const MainPage = () => {
           </div>
         </Section>
         <Section>
-          <CommitCard data={TempUser} />
+          {/*<CommitCard data={TempUser} />*/}
         </Section>
       </PageContainer>
     </>
