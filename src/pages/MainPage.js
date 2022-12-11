@@ -8,7 +8,6 @@ import {InfoCard} from "../components/Card/InfoCard";
 import {StatusCard} from "../components/Card/StatusCard";
 import {CommitCard} from "../components/Card/CommitCard";
 import {TeamData} from "../assets/TeamData";
-import {TempUser} from "../assets/TempUser";
 
 const PageContainer = styled.main`
   max-width: 1194px;
@@ -80,7 +79,7 @@ const MainPage = () => {
           </div>
         </Section>
         <Section>
-          {/*<CommitCard data={TempUser} />*/}
+          <CommitCard data={userCommits} />
         </Section>
       </PageContainer>
     </>
