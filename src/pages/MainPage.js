@@ -65,7 +65,7 @@ const MainPage = () => {
                         }
                     });
 
-                    return ({userName: users[i], commits: new Map([...commitMap.entries()].sort((a, b) => a[0] - b[0]))});
+                    return ({userName: users[i], commits: new Map([...commitMap.entries()].sort((a, b) => new Date(a[0]) - new Date(b[0])))});
                 });
 
                 setUserCommits(result);
