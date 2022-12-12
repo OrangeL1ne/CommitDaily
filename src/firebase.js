@@ -1,7 +1,6 @@
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
-import { GithubAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_API_KEY,
@@ -13,12 +12,7 @@ const firebaseConfig = {
     measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
-
 const firebaseApp= firebase.initializeApp(firebaseConfig);
 firebase.initializeApp(firebaseConfig);
 const firestore=firebase.firestore();
 export{firestore, firebaseApp};
-// const db = firebaseApp.firestore();
-// const auth = firebase.auth();
-//
-// export { auth, db };

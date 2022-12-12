@@ -11,30 +11,22 @@ import {TeamData} from "../assets/TeamData";
 import {TempUser} from "../assets/TempUser";
 import {firestore} from "../service/firebase";
 
-
-
-
+const LoadingStatus=styled.text`
+    font-size: 20px;
+`;
 const PageContainer = styled.main`
   max-width: 1194px;
   margin: 0 auto;
   padding: 121px 0;
 `;
-
 const Section = styled.section`
   margin: 48px 0 0;
 `;
 
-const MainPage = ({data}) => {//data:gitHub Email
-
-    //랭킹카드 안가져와지는 것도 데이터가 아직 0인 상태에서 불러와서 안보이는 것임 -> 가끔가다 보이는게 합리적 의심
-  //collection:user
-  //document:M5mwnQA09nynnAfNMUWK//
-  //isAuth -> 로그인한 사람의 isAuth를 false-> true
-
+const MainPage = () => {
 
   let today=new Date().toDateString();
 
-  //const [users, setUsers] = useState(['eeseung', 'bogyung1', 'Loy-Yun', 'seonggwonyoon']);
   const [users, setUsers] = useState([]);
   const [userCommits, setUserCommits] = useState([]);
   const [totNum, setTotNum]=useState(0);
@@ -43,79 +35,63 @@ const MainPage = ({data}) => {//data:gitHub Email
 
    useEffect(() => {
 
+       async function fetchUserData(){
+           const user= firestore.collection("user");
+           await user.get().then((docs)=>{
 
-       console.log("@@@@@@@@@@@@")
-       const user=firestore.collection("user");
-       user.get().then((docs)=>{
-
-           docs.forEach((doc)=>{
-               if(doc.exists){
-                   console.log("@?@??@?@?")
-                   console.log(doc.data().email);
-                   if(doc.data().email==="bogyung1@naver.com"){//로그인한 github email 전달
-                       if(!doc.data().isAuth){//false
-                           user.doc(doc.id).update({isAuth: true}).then(r => console.log("로그인되었습니다!"));
-
+               docs.forEach((doc)=>{
+                   if(doc.exists){
+                       console.log("@?@??@?@?")
+                       console.log(doc.data().email);
+                       if(doc.data().isAuth){
+                           if(!users.includes(doc.data().userId)){
+                               users.push(doc.data().userId);
+                               setUsers(users);
+                           }
                        }
                    }
-                   if(doc.data().isAuth){
-                       if(!users.includes(doc.data().displayName)){
-                           users.push(doc.data().displayName);
-                           setUsers(users);
-                       }
-                   }
-               }
-           });
-       });
-
-     console.log("user....");
-     console.log(users);
-
-
-     const requests = users.map(user => axios.get(user));
-     const cheerio = require('cheerio');
-
-
-     axios.all(requests).then(
-         axios.spread((...response) => {
-           const result = response.map((r, i) => {
-             const $ = cheerio.load(r.data);
-             const rects = [];
-             const commitMap = new Map();
-
-             $('rect').each((index, item) => {
-               rects.push(item.attribs);
-             });
-             rects.forEach(rect => {
-               const date = new Date(rect['data-date']);
-
-               if (TeamData.start <= date && date <= TeamData.end) {
-                 commitMap.set(date.toDateString(), rect['data-score']);
-               }
-             });
-
-             return ({userName: users[i], commits: new Map([...commitMap.entries()].sort((a, b) => a[0] - b[0]))});
+               });
            });
 
-           setUserCommits(result);
-         })).catch(errors => {
-       console.error(errors);
+           const requests = users.map(user => axios.get(user));
+           const cheerio = require('cheerio');
 
-     });
+           await axios.all(requests).then(
+               axios.spread((...response) => {
+                   const result = response.map((r, i) => {
+                       const $ = cheerio.load(r.data);
+                       const rects = [];
+                       const commitMap = new Map();
 
-     setIsLoading(false);
-     // setTotCommit(userCommits[0].commits.size);
-     // setTotNum(userCommits.length);
-       setTotCommit(17);
-       setTotNum(4);
+                       $('rect').each((index, item) => {
+                           rects.push(item.attribs);
+                       });
+                       rects.forEach(rect => {
+                           const date = new Date(rect['data-date']);
+
+                           if (TeamData.start <= date && date <= TeamData.end) {
+                               commitMap.set(date.toDateString(), rect['data-score']);
+                           }
+                       });
+
+                       return ({userName: users[i], commits: new Map([...commitMap.entries()].sort((a, b) => a[0] - b[0]))});
+                   });
+
+                   setUserCommits(result);
+
+
+               })).catch(errors => {
+               console.error(errors);
+
+           });
+           await setTotCommit(userCommits[0].commits.size);
+           await setTotNum(userCommits.length);
+       }
+
+       fetchUserData().then(r => console.log("fetchData"));
+       setIsLoading(false);
 
    }, [users])
-
-  //console.log();
-  //console.log(userCommits[0].commits.get("Sun Jan 02 2022"));
-
-  console.log(userCommits);
-
 
   function handleLogin() {
     // TODO: login
@@ -136,7 +112,6 @@ const MainPage = ({data}) => {//data:gitHub Email
 
   //전체 출석 일수
   function totalAttendDay(){
-       //forEach문해서 안에 조건문 넣기
      try{
        let keys=[];
        for(let [key, value] of userCommits[0].commits){
@@ -157,7 +132,6 @@ const MainPage = ({data}) => {//data:gitHub Email
      }
   }
 
-
   //전체 커밋 개수
   function funcTotCommits(){
      try{
@@ -171,12 +145,10 @@ const MainPage = ({data}) => {//data:gitHub Email
      }
   }
 
-
-
   return isLoading ? (
       //case: true
       <>
-        <text>Loading your Commits...</text>
+        <LoadingStatus>Loading your Commits...</LoadingStatus>
       </>
   ): (
     //case false
@@ -203,5 +175,4 @@ const MainPage = ({data}) => {//data:gitHub Email
     </>
   );
 };
-
 export default MainPage;
