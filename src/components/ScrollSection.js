@@ -12,14 +12,12 @@ const StyledAlwaysScrollSection = styled.div`
   width:582px;
   height: 720px;
   background: #FFFFFF;
-  box-shadow: 0 2px 10px;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 7%);
   &::-webkit-scrollbar {
     /* 세로 스크롤 넓이 */
     width: 8px;
-
     /* 가로 스크롤 높이 */
     height: 8px;
-
     border-radius: 6px;
     background: rgba(255, 255, 255, 0.4);
   }

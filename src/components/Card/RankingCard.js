@@ -2,15 +2,10 @@ import React, {useState, useEffect} from 'react'
 import styled from "styled-components";
 import {ScrollSection} from "../ScrollSection";
 import profile_sample from '../../assets/profile_sample.png';
+import {TeamData} from "../../assets/TeamData";
 const Title=styled.text`
-  width: 117px;
-  height: 50px;
-  text-align: center;
-  padding-left: 24px;
-  font-style: normal;
-  font-weight: 600;
   font-size: 24px;
-  line-height: 33px;
+
 `;
 const ListDiv=styled.div`
   display: flex;
@@ -22,18 +17,26 @@ const ListDiv=styled.div`
 export const RankingCard = ({data}) => {
 
     const rank_list=[];
+    const [dataT, setDataT] = useState([]);
 
-    let today=new Date().toDateString();
-
-    for(let i=0; i<data.length; i++){
-        rank_list.push({rank:i, user: data[i].userName, n_commit:parseInt(data[i].commits.get(today))})
+    function fetchRanks(){
+        if(TeamData.end< new Date()){
+            for(let i=0; i<data.length; i++){
+                rank_list.push({rank:i, user: data[i].userName, n_commit:"-"})
+            }
+            setDataT(rank_list);
+        }else{
+            for(let i=0; i<data.length; i++){
+                rank_list.push({rank:i, user: data[i].userName, n_commit:parseInt(data[i].commits.get(new Date()))})
+            }
+            setDataT([rank_list]);
+            const sorted=[...rank_list].sort((a,b)=>parseInt(b.n_commit)-parseInt(a.n_commit));
+            setDataT(sorted);
+        }
     }
 
-    const [dataT, setDataT] = useState([rank_list]);
-
     useEffect(() => {
-        const sorted=[...rank_list].sort((a,b)=>parseInt(b.n_commit)-parseInt(a.n_commit));
-        setDataT(sorted);
+        fetchRanks();
         }, [data])
 
     const listItem = dataT.map((item, idx) =>
@@ -52,7 +55,9 @@ export const RankingCard = ({data}) => {
     );
     return (
         <ScrollSection>
-            <Title>오늘의 순위</Title>
+            <div style={{padding:"20px", marginLeft:"10px"}}>
+                <Title>오늘의 순위</Title>
+            </div>
             <ul style={{listStyleType:"none"}}>
                 {listItem}
             </ul>

@@ -71,6 +71,7 @@ const MainPage = () => {
                 setUserCommits(result);
                 setTotCommit(result[0].commits.size);
                 setTotNum(result.length);
+                console.log(result);
 
             })).catch(errors => {
             console.error(errors);
@@ -92,13 +93,14 @@ const MainPage = () => {
     })
   }
 
-
-
   //오늘의 출석률
   function todayAttendee(today){
      try{
        let todayAttendee=0;
        for (let i=0; i<userCommits.length; i++){
+         if(TeamData.end< new Date()){
+             return "-"
+         }
          if (userCommits[i].commits.get(today) !=="0"){
            todayAttendee++;
          }}
