@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import axios from "axios";
+import {join} from "../services/auth";
 import {Header} from "../components/Header";
 import {TeamCard} from "../components/Card/TeamCard";
 import {RankingCard} from "../components/Card/RankingCard";
@@ -8,7 +9,6 @@ import {InfoCard} from "../components/Card/InfoCard";
 import {StatusCard} from "../components/Card/StatusCard";
 import {CommitCard} from "../components/Card/CommitCard";
 import {TeamData} from "../assets/TeamData";
-import {TempUser} from "../assets/TempUser";
 
 const PageContainer = styled.main`
   max-width: 1194px;
@@ -43,30 +43,39 @@ const MainPage = () => {
             const date = new Date(rect['data-date']);
 
             if (TeamData.start <= date && date <= TeamData.end) {
-              commitMap.set(date, rect['data-score']);
+              commitMap.set(date.toDateString(), rect['data-score']);
             }
           });
 
-          return ({userName: users[i], commits: new Map([...commitMap.entries()].sort((a, b) => a[0] - b[0]))});
+          return ({
+            userName: users[i],
+            commits: new Map([...commitMap.entries()].sort((a, b) => new Date(a[0]) - new Date(b[0])))
+          });
         });
 
         setUserCommits(result);
-    })).catch(errors => {
+      })).catch(errors => {
       console.error(errors);
     });
   }, [users])
 
   function handleLogin() {
-    // TODO: login
+    join().then(r => {
+      if (r.success) {
+        alert(`${r.message} 계정으로 참여했습니다.`);
+      } else {
+        alert(`참여에 실패했습니다. 관리자에게 문의하세요. (${r.message})`)
+      }
+    })
   }
 
   return (
     <>
       <Header _onClick={handleLogin} />
       <PageContainer>
-        <TeamCard data={TeamData} />
+        <TeamCard {...TeamData} />
         <Section>
-          <InfoCard content="md파일!!" />
+          <InfoCard />
         </Section>
         <Section style={{display: 'inline-flex'}}>
           <RankingCard />
@@ -77,7 +86,7 @@ const MainPage = () => {
           </div>
         </Section>
         <Section>
-          <CommitCard data={TempUser} />
+          <CommitCard data={userCommits} />
         </Section>
       </PageContainer>
     </>

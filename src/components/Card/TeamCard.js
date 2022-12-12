@@ -1,6 +1,9 @@
 import React from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 import {ProgressBar} from "../ProgressBar";
+
+const DAY = 1000 * 60 * 60 * 24;
 
 const HeadingText = styled.h2`
   margin: 0 0 50px 0;
@@ -11,8 +14,8 @@ const HeadingText = styled.h2`
 `;
 
 const PeriodText = styled.p`
-  padding: 0 12px;
   margin: 0 0 20px 0;
+  padding: 0 12px;
   display: inline-block;
   font-weight: 500;
   font-size: 24px;
@@ -22,25 +25,42 @@ const PeriodText = styled.p`
   border-radius: 33px;
 `;
 
-export const TeamCard = ({data}) => {
-  const startDate = (data.start.getMonth() + 1) + '/' + data.start.getDate(); // 시작일
-  const endDate = (data.end.getMonth() + 1) + '/' + data.end.getDate(); // 종료일
-  const period = Math.floor((data.end.getTime() - data.start.getTime()) / (1000 * 60 * 60 * 24)) + 1; // 기간
+export const TeamCard = ({team, start, end}) => {
+  const startDate = (start.getMonth() + 1) + '/' + start.getDate();
+  const endDate = (end.getMonth() + 1) + '/' + end.getDate();
+  const period = Math.floor((end.getTime() - start.getTime()) / DAY) + 1;
+  const today = new Date();
+
+  function getValue(today, startDate, endDate) {
+    if (endDate > today && today > startDate) {
+      const dday = Math.floor((today.getTime() - startDate.getTime()) / DAY) + 1;
+      return Math.floor(dday / period * 100);
+    }
+
+    return 100;
+  }
+
+  function getDDay(today, endDate) {
+    return Math.floor((endDate - today) / DAY) + 1;
+  }
 
   return (
     <header>
-      <HeadingText>{data.team}</HeadingText>
+      <HeadingText>{team}</HeadingText>
       <PeriodText>Period : {startDate} ~ {endDate} (총 {period}일)</PeriodText>
-      <ProgressBar value="70" />
+      <ProgressBar value={getValue(today, start, end)} dDay={getDDay(today, end)} />
     </header>
   );
 }
 
-TeamCard.defaultProps = {
-  data: {
-    team: 'TEAM NAME 🍀',
-    start: new Date('2022-01-01'),
-    end: new Date('2022-02-02'),
-  },
+TeamCard.prototypes = {
+  team: PropTypes.string,
+  start: PropTypes.object.isRequired,
+  end: PropTypes.object.isRequired
 };
 
+TeamCard.defaultProps = {
+  team: 'OrangeL1ne',
+  start: new Date('2022-01-01'),
+  end: new Date('2022-01-31')
+}
