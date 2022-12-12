@@ -1,3 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@500;600;700;800&display=swap');
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  src: url("assets/fonts/JetBrainsMono-Medium.woff2") format('woff2')
+}
+
 :root {
   background-color: #F8F9FC;
 
@@ -26,4 +35,8 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+* {
+  font-family: 'Noto Sans', sans-serif;
 }

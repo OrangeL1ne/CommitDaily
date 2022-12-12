@@ -31,15 +31,16 @@ const Text = styled.text`
 `;
 
 const TooltipText = styled.div`
-  transform: translate(${props => props.left}px, ${props => props.top}px);
   width: 304px;
   height: 61px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
+  transform: translate(${props => props.left}px, ${props => props.top}px);
   z-index: 10;
   pointer-events: none;
+  font-family: "JetBrains Mono", sans-serif;
   font-size: 22px;
   line-height: 29px;
   color: var(--color-white);
@@ -55,6 +56,10 @@ const TooltipText = styled.div`
     position: absolute;
     top: 61px;
     left: 142px;
+  }
+
+  span {
+    font-size: 18px;
   }
 `;
 
@@ -141,7 +146,8 @@ export const CommitCard = ({data}) => {
         </CommitContainer>
         {tipPosition.top > -1 && tipPosition.left > -1 && Object.keys(tipCommit).length > 0 &&
           <TooltipText left={tipPosition.left} top={tipPosition.top}>
-            {tipCommit.commit}commits on {months[tipCommit.date.getMonth()]} {tipCommit.date.getDate() + getNth(tipCommit.date.getDate())}
+            {tipCommit.commit}commits
+            <span>&nbsp;on {months[tipCommit.date.getMonth()]} {tipCommit.date.getDate() + getNth(tipCommit.date.getDate())}</span>
           </TooltipText>
         }
       </div>
