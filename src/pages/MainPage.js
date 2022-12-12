@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import axios from "axios";
+import {join} from "../services/auth";
 import {Header} from "../components/Header";
 import {TeamCard} from "../components/Card/TeamCard";
 import {RankingCard} from "../components/Card/RankingCard";
@@ -8,8 +9,8 @@ import {InfoCard} from "../components/Card/InfoCard";
 import {StatusCard} from "../components/Card/StatusCard";
 import {CommitCard} from "../components/Card/CommitCard";
 import {TeamData} from "../assets/TeamData";
-import {TempUser} from "../assets/TempUser";
-import {firestore} from "../service/firebase";
+import {db} from "../firebase";
+import {collection, getDocs} from "firebase/firestore";
 
 const LoadingStatus=styled.text`
     font-size: 20px;
@@ -33,69 +34,65 @@ const MainPage = () => {
   const [totCommit,setTotCommit]=useState(0);
   const [isLoading, setIsLoading]=useState(true);
 
+    async function fetchUserData(){
+        (await getDocs(collection(db, "user"))).
+        forEach((doc)=>{
+                if(!users.includes(doc.data().userId)){
+                    users.push(doc.data().userId);
+                    setUsers(users);
+                }
+            }
+        );
+
+        const requests = users.map(user => axios.get(user));
+        const cheerio = require('cheerio');
+
+        await axios.all(requests).then(
+            axios.spread((...response) => {
+                const result = response.map((r, i) => {
+                    const $ = cheerio.load(r.data);
+                    const rects = [];
+                    const commitMap = new Map();
+
+                    $('rect').each((index, item) => {
+                        rects.push(item.attribs);
+                    });
+                    rects.forEach(rect => {
+                        const date = new Date(rect['data-date']);
+
+                        if (TeamData.start <= date && date <= TeamData.end) {
+                            commitMap.set(date.toDateString(), rect['data-score']);
+                        }
+                    });
+
+                    return ({userName: users[i], commits: new Map([...commitMap.entries()].sort((a, b) => a[0] - b[0]))});
+                });
+
+                setUserCommits(result);
+                setTotCommit(result[0].commits.size);
+                setTotNum(result.length);
+
+            })).catch(errors => {
+            console.error(errors);
+        });
+    }
+
    useEffect(() => {
-
-       async function fetchUserData(){
-           const user= firestore.collection("user");
-           await user.get().then((docs)=>{
-
-               docs.forEach((doc)=>{
-                   if(doc.exists){
-                       console.log("@?@??@?@?")
-                       console.log(doc.data().email);
-                       if(doc.data().isAuth){
-                           if(!users.includes(doc.data().userId)){
-                               users.push(doc.data().userId);
-                               setUsers(users);
-                           }
-                       }
-                   }
-               });
-           });
-
-           const requests = users.map(user => axios.get(user));
-           const cheerio = require('cheerio');
-
-           await axios.all(requests).then(
-               axios.spread((...response) => {
-                   const result = response.map((r, i) => {
-                       const $ = cheerio.load(r.data);
-                       const rects = [];
-                       const commitMap = new Map();
-
-                       $('rect').each((index, item) => {
-                           rects.push(item.attribs);
-                       });
-                       rects.forEach(rect => {
-                           const date = new Date(rect['data-date']);
-
-                           if (TeamData.start <= date && date <= TeamData.end) {
-                               commitMap.set(date.toDateString(), rect['data-score']);
-                           }
-                       });
-
-                       return ({userName: users[i], commits: new Map([...commitMap.entries()].sort((a, b) => a[0] - b[0]))});
-                   });
-
-                   setUserCommits(result);
-
-
-               })).catch(errors => {
-               console.error(errors);
-
-           });
-           await setTotCommit(userCommits[0].commits.size);
-           await setTotNum(userCommits.length);
-       }
-
-       fetchUserData().then(r => console.log("fetchData"));
+       fetchUserData().then(r => {console.log("fetchData");});
        setIsLoading(false);
-
    }, [users])
 
   function handleLogin() {
-    // TODO: login
+    join().then(r => {
+      if (r.success) {
+        alert(`${r.message} 계정으로 참여했습니다.`);
+      } else {
+        alert(`참여에 실패했습니다. 관리자에게 문의하세요. (${r.message})`)
+      }
+    })
   }
+
+
 
   //오늘의 출석률
   function todayAttendee(today){
@@ -153,12 +150,11 @@ const MainPage = () => {
   ): (
     //case false
     <>
-
       <Header _onClick={handleLogin} />
       <PageContainer>
-        <TeamCard data={TeamData} />
+        <TeamCard {...TeamData} />
         <Section>
-          <InfoCard content="md파일!!"/>
+          <InfoCard />
         </Section>
         <Section style={{display: 'inline-flex'}}>
           <RankingCard data={userCommits}/>
@@ -169,7 +165,7 @@ const MainPage = () => {
           </div>
         </Section>
         <Section>
-          <CommitCard data={TempUser} />
+          <CommitCard data={userCommits} />
         </Section>
       </PageContainer>
     </>

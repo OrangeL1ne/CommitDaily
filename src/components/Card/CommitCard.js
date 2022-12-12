@@ -1,7 +1,9 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
 const Card = styled.div`
+  width: 1170px;
   height: 100%;
   padding: 20px 0 48px 24px;
   background-color: var(--color-white);
@@ -28,23 +30,51 @@ const Text = styled.text`
   fill: var(--color-black);
 `;
 
-const TooltipText = styled.text`
-  position: relative;
-  z-index: 100;
+const TooltipText = styled.div`
+  transform: translate(${props => props.left}px, ${props => props.top}px);
+  width: 304px;
+  height: 61px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 10;
+  pointer-events: none;
   font-size: 22px;
-  fill: var(--color-white);
+  line-height: 29px;
+  color: var(--color-white);
+  background-color: #141414;
+  border-radius: 7px;
+
+  &:after {
+    border-top: 10px solid #141414;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 0 solid transparent;
+    content: "";
+    position: absolute;
+    top: 61px;
+    left: 142px;
+  }
 `;
 
 export const CommitCard = ({data}) => {
-  const [tipPosition, setTipPosition] = useState( {top: -1, left: -1});
+  const [tipPosition, setTipPosition] = useState( {left: -1, top: -1});
+  const [tipCommit, setTipCommit] = useState({});
+  const tipRef = useRef(-1);
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-  function handleMouseOver(commit) {
-    setTipPosition(commit);
+  function handleMouseOver(e, commit) {
+    const parent = tipRef.current.getBoundingClientRect();
+    const rect = e.target.getBoundingClientRect();
+
+    setTipPosition({left: rect.x - parent.x - 156, top: rect.y - parent.y - 110});
+    setTipCommit({date: new Date(commit[0]), commit: commit[1]});
   }
 
   function handleMouseOut() {
-    setTipPosition({top: -1, left: -1});
+    setTipPosition({left: -1, top: -1});
+    setTipCommit({});
   }
 
   function getNth(date) {
@@ -58,47 +88,34 @@ export const CommitCard = ({data}) => {
   }
 
   const userList = data.map((user, i) => {
-    return <Text y={i * 49 + 16} key={i}>{user.name}</Text>
+    return <Text y={i * 49 + 16} key={i}>{user.userName}</Text>
   });
 
-  const dateList = data[0].commits?.map((commit, i) => {
-    const month = ('0' + (1 + commit.date.getMonth())).slice(-2);
-    const day = ('0' + commit.date.getDate()).slice(-2);
+  const dateList = data.length > 0 && [...data[0].commits?.keys()].map((commit, i) => {
+    const date = new Date(commit);
+    const month = ('0' + (1 + date.getMonth())).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
 
-    return <Text transform="translate(-3, 0)" x={i * 72} y="0" key={i}>{month + '/' + day}</Text>; // translate(143, 0)
+    return <Text transform="translate(-3, 0)" x={i * 72} y="0" key={i}>{month + '/' + day}</Text>
   });
 
-  const commits = data.map((user, idx) => {
-    const commitList = user.commits?.map((commit, i) => {
+  const commits = data && data?.map((user, idx) => {
+    const commitList = Array.from(user.commits.entries()).map((commit, i) => {
       let index = 0;
 
-      if (commit.count >= 9) index = 9;
-      else if (commit.count >= 7) index = 7;
-      else if (commit.count >= 5) index = 5;
-      else if (commit.count >= 3) index = 3;
-      else if (commit.count >= 1) index = 1;
+      if (commit[1] >= 9) index = 9;
+      else if (commit[1] >= 7) index = 7;
+      else if (commit[1] >= 5) index = 5;
+      else if (commit[1] >= 3) index = 3;
+      else if (commit[1] >= 1) index = 1;
 
       return (
-          <g key={i}>
-            <rect
-                width="41" height="26" x={i * 72} rx="6" fill={`var(--color-green-${index})`} strokeWidth="1" stroke="#DEDEDE"
-                onMouseOver={() => handleMouseOver({top: idx, left: i})}
-                onMouseOut={handleMouseOut}
-            />
-            {tipPosition.top !== -1 && tipPosition.left !== -1 && tipPosition.top === idx && tipPosition.left === i &&
-            <g>
-              <svg width="304" height="73" x={tipPosition.left * 72 - 132} y="-65" viewBox="0 0 304 73" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g opacity="0.98">
-                  <rect y="0.881836" width="304" height="61" rx="7" fill="#141414" />
-                  <path d="M153.239 72.8818L137.957 59.1338H168.109L153.239 72.8818Z" fill="#141414" />
-                </g>
-              </svg>
-              <TooltipText transform="translate(0, 0)" x={tipPosition.left * 72 - 104} y="-26">
-                {commit.count}commits on {months[commit.date.getMonth()]} {commit.date.getDate() + getNth(commit.date.getDate())}
-              </TooltipText>
-            </g>
-            }
-          </g>
+        <g key={i} onMouseEnter={e => handleMouseOver(e, commit)}
+           onMouseLeave={handleMouseOut}>
+          <rect
+            width="41" height="26" x={i * 72} rx="6" fill={`var(--color-green-${index})`} strokeWidth="1" stroke="#DEDEDE"
+          />
+        </g>
       )
     });
 
@@ -106,30 +123,35 @@ export const CommitCard = ({data}) => {
   });
 
   return (
-      <Card>
-        <HeadingText>잔디 밭 🌱</HeadingText>
-        <div style={{display:'flex'}}>
-          <CommitContainer>
-            <svg width={72 * data[0].commits.length + 140} height={(data.length + 1) * 49 + 16}>
-              <g transform="translate(152, 45)">
-                {dateList}
-              </g>
-              <g transform="translate(0, 72)">
-                {userList}
-              </g>
-              <g transform="translate(152, 72)">
-                {commits}
-              </g>
-            </svg>
-          </CommitContainer>
-        </div>
-      </Card>
+    <Card ref={tipRef}>
+      <HeadingText>잔디 밭 🌱</HeadingText>
+      <div style={{display:'flex'}}>
+        <CommitContainer>
+          <svg width={data && 72 * dateList.length + 140 || 0} height={(data.length + 1) * 49 + 16}>
+            <g transform="translate(152, 45)">
+              {dateList}
+            </g>
+            <g transform="translate(0, 72)">
+              {userList}
+            </g>
+            <g transform="translate(152, 72)">
+              {commits}
+            </g>
+          </svg>
+        </CommitContainer>
+        {tipPosition.top > -1 && tipPosition.left > -1 && Object.keys(tipCommit).length > 0 &&
+          <TooltipText left={tipPosition.left} top={tipPosition.top}>
+            {tipCommit.commit}commits on {months[tipCommit.date.getMonth()]} {tipCommit.date.getDate() + getNth(tipCommit.date.getDate())}
+          </TooltipText>
+        }
+      </div>
+    </Card>
   );
 };
 
-CommitCard.defaultProps = {
-  team: {
-    start: new Date('2022-01-01'),
-    end: new Date('2022-01-17')
-  }
+CommitCard.prototypes = {
+  data: PropTypes.array.isRequired,
 };
+CommitCard.defaultProps = {
+  data: [],
+}

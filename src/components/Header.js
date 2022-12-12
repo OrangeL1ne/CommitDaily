@@ -37,7 +37,7 @@ export const Header = ({_onClick}) => {
   return (
     <HeaderBlock>
       <HeadingText>COMMITDAILY 🍀</HeadingText>
-      <Button onClick={_onClick}>LOGIN</Button>
+      <Button onClick={_onClick}>JOIN</Button>
     </HeaderBlock>
   );
 }
