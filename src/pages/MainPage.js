@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import axios from "axios";
+import {join} from "../services/auth";
 import {Header} from "../components/Header";
 import {TeamCard} from "../components/Card/TeamCard";
 import {RankingCard} from "../components/Card/RankingCard";
@@ -59,7 +60,13 @@ const MainPage = () => {
   }, [users])
 
   function handleLogin() {
-    // TODO: login
+    join().then(r => {
+      if (r.success) {
+        alert(`${r.message} 계정으로 참여했습니다.`);
+      } else {
+        alert(`참여에 실패했습니다. 관리자에게 문의하세요. (${r.message})`)
+      }
+    })
   }
 
   return (
