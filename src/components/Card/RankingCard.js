@@ -22,12 +22,12 @@ export const RankingCard = ({data}) => {
     function fetchRanks(){
         if(TeamData.end< new Date()){
             for(let i=0; i<data.length; i++){
-                rank_list.push({rank:i, user: data[i].userName, n_commit:"-"})
+                rank_list.push({rank:i, user: data[i].userName, n_commit:"-", profile_image:"https://github.com/"+data[i].userName+".png"})
             }
             setDataT(rank_list);
         }else{
             for(let i=0; i<data.length; i++){
-                rank_list.push({rank:i, user: data[i].userName, n_commit:parseInt(data[i].commits.get(new Date()))})
+                rank_list.push({rank:i, user: data[i].userName, n_commit:parseInt(data[i].commits.get(new Date())), profile_image: "https://github.com/"+data[i].userName+".png"})
             }
             setDataT([rank_list]);
             const sorted=[...rank_list].sort((a,b)=>parseInt(b.n_commit)-parseInt(a.n_commit));
@@ -45,8 +45,8 @@ export const RankingCard = ({data}) => {
             <ListDiv>
                 {/*TODO: 1등 아이콘 처리*/}
                 <div style={{minWidth:"15px"}}>{idx+1}등</div>
-                <div style={{minWidth: "70px" ,padding:"20px 40px 20px 40px"}}>
-                    <img alt='profile' src={profile_sample}/>
+                <div style={{minWidth: "70px" ,padding:"20px 50px"}}>
+                    <img style={{width:"65px", borderRadius: "30px"}} alt='profile' src={item.profile_image}/>
                 </div>
                 <div style={{minWidth:"200px"}}>{item.user}</div>
                 <div style={{minWidth: "100px"}}>{item.n_commit} commit</div>
